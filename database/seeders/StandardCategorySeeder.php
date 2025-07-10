@@ -30,7 +30,5 @@ class StandardCategorySeeder extends Seeder
                 ['description' => $category['description']]
             );
         }
-
-        $this->command->info('Standard categories seeded successfully.');
     }
 }
