@@ -9,7 +9,7 @@ class BookRepository implements BookRepositoryInterface
 {
     public function getAll()
     {
-        return Book::all();
+        return Book::with('categories')->get();
     }
 
     public function details($id)
