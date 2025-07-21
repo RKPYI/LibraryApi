@@ -1,10 +1,29 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "Library Management API",
-        "description": "API for managing library operations including books, users, and borrowing.",
+        "title": "Library Management System API",
+        "description": "A comprehensive REST API for managing library operations including books, users, categories, and borrowing workflows. This API provides secure authentication, role-based access control, and complete CRUD operations for all library entities.",
+        "termsOfService": "https://example.com/terms",
+        "contact": {
+            "name": "Library API Support",
+            "email": "support@libraryapi.com"
+        },
+        "license": {
+            "name": "MIT License",
+            "url": "https://opensource.org/licenses/MIT"
+        },
         "version": "1.0.0"
     },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "Local Development Server"
+        },
+        {
+            "url": "https://api.librarymanagement.com",
+            "description": "Production Server"
+        }
+    ],
     "paths": {
         "/api/v1/auth/register": {
             "post": {
@@ -1243,30 +1262,613 @@
             }
         }
     },
+    "components": {
+        "schemas": {
+            "User": {
+                "title": "User",
+                "description": "User model",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "john@example.com"
+                    },
+                    "role": {
+                        "type": "string",
+                        "enum": [
+                            "admin",
+                            "member"
+                        ],
+                        "example": "member"
+                    },
+                    "email_verified_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Book": {
+                "title": "Book",
+                "description": "Book model",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "The Great Gatsby"
+                    },
+                    "author": {
+                        "type": "string",
+                        "example": "F. Scott Fitzgerald"
+                    },
+                    "isbn": {
+                        "type": "string",
+                        "example": "978-0-7432-7356-5"
+                    },
+                    "published_at": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "1925-04-10"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "A classic American novel",
+                        "nullable": true
+                    },
+                    "cover_image": {
+                        "type": "string",
+                        "example": "https://example.com/covers/book1.jpg",
+                        "nullable": true
+                    },
+                    "stock": {
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "available_stock": {
+                        "type": "integer",
+                        "example": 3
+                    },
+                    "categories": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Category"
+                        }
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Category": {
+                "title": "Category",
+                "description": "Category model",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Fiction"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Fictional literature and novels",
+                        "nullable": true
+                    },
+                    "books_count": {
+                        "type": "integer",
+                        "example": 15
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Borrow": {
+                "title": "Borrow",
+                "description": "Borrow model",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "book_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "pending",
+                            "borrowed",
+                            "overdue",
+                            "returned",
+                            "cancelled",
+                            "return_requested",
+                            "return_rejected"
+                        ],
+                        "example": "borrowed"
+                    },
+                    "requested_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "approved_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "due_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2024-02-15",
+                        "nullable": true
+                    },
+                    "returned_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "notes": {
+                        "type": "string",
+                        "example": "Research project",
+                        "nullable": true
+                    },
+                    "admin_notes": {
+                        "type": "string",
+                        "example": "Approved",
+                        "nullable": true
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "book": {
+                        "$ref": "#/components/schemas/Book"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "ApiResponse": {
+                "title": "API Response",
+                "description": "Standard API response format",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Operation successful"
+                    },
+                    "data": {
+                        "description": "Response data",
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "ApiErrorResponse": {
+                "title": "API Error Response",
+                "description": "Standard API error response format",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Error description"
+                    },
+                    "errors": {
+                        "description": "Validation errors",
+                        "type": "object",
+                        "example": {
+                            "field_name": [
+                                "Specific validation error"
+                            ]
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "PaginatedResponse": {
+                "title": "Paginated Response",
+                "description": "Paginated response format",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Data retrieved successfully"
+                    },
+                    "data": {
+                        "properties": {
+                            "data": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object"
+                                }
+                            },
+                            "current_page": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "last_page": {
+                                "type": "integer",
+                                "example": 5
+                            },
+                            "per_page": {
+                                "type": "integer",
+                                "example": 15
+                            },
+                            "total": {
+                                "type": "integer",
+                                "example": 75
+                            },
+                            "from": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "to": {
+                                "type": "integer",
+                                "example": 15
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "AuthResponse": {
+                "title": "Authentication Response",
+                "description": "Authentication response with user and token",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Login successful"
+                    },
+                    "data": {
+                        "properties": {
+                            "user": {
+                                "$ref": "#/components/schemas/User"
+                            },
+                            "token": {
+                                "type": "string",
+                                "example": "1|abcdefghijklmnopqrstuvwxyz123456789"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "BookCreateRequest": {
+                "title": "Book Create Request",
+                "description": "Request body for creating a book",
+                "required": [
+                    "title",
+                    "author",
+                    "published_at",
+                    "isbn"
+                ],
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "example": "The Great Gatsby"
+                    },
+                    "author": {
+                        "type": "string",
+                        "example": "F. Scott Fitzgerald"
+                    },
+                    "isbn": {
+                        "type": "string",
+                        "example": "978-0-7432-7356-5"
+                    },
+                    "published_at": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "1925-04-10"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "A classic American novel"
+                    },
+                    "cover_image": {
+                        "description": "Book cover image file",
+                        "type": "string",
+                        "format": "binary"
+                    },
+                    "stock": {
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "categories": {
+                        "description": "Array of category IDs",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "example": [
+                            1,
+                            2
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "BookUpdateRequest": {
+                "title": "Book Update Request",
+                "description": "Request body for updating a book",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "example": "The Great Gatsby"
+                    },
+                    "author": {
+                        "type": "string",
+                        "example": "F. Scott Fitzgerald"
+                    },
+                    "isbn": {
+                        "type": "string",
+                        "example": "978-0-7432-7356-5"
+                    },
+                    "published_at": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "1925-04-10"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "A classic American novel"
+                    },
+                    "cover_image": {
+                        "description": "Book cover image file",
+                        "type": "string",
+                        "format": "binary"
+                    },
+                    "stock": {
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "categories": {
+                        "description": "Array of category IDs",
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "example": [
+                            1,
+                            2
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "CategoryRequest": {
+                "title": "Category Request",
+                "description": "Request body for creating/updating a category",
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Fiction"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Fictional literature and novels"
+                    }
+                },
+                "type": "object"
+            },
+            "BorrowRequest": {
+                "title": "Borrow Request",
+                "description": "Request body for borrowing a book",
+                "required": [
+                    "book_id"
+                ],
+                "properties": {
+                    "book_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "notes": {
+                        "type": "string",
+                        "example": "I need this book for my research project"
+                    }
+                },
+                "type": "object"
+            },
+            "BorrowApprovalRequest": {
+                "title": "Borrow Approval Request",
+                "description": "Request body for approving a borrow",
+                "properties": {
+                    "due_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2024-02-15"
+                    },
+                    "notes": {
+                        "type": "string",
+                        "example": "Approved. Please return by due date."
+                    }
+                },
+                "type": "object"
+            },
+            "ReturnRequest": {
+                "title": "Return Request",
+                "description": "Request body for return operations",
+                "properties": {
+                    "notes": {
+                        "type": "string",
+                        "example": "Returning the book in good condition"
+                    }
+                },
+                "type": "object"
+            },
+            "UserUpdateRequest": {
+                "title": "User Update Request",
+                "description": "Request body for updating user information",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "john@example.com"
+                    },
+                    "role": {
+                        "type": "string",
+                        "enum": [
+                            "member",
+                            "admin"
+                        ],
+                        "example": "member"
+                    }
+                },
+                "type": "object"
+            },
+            "LoginRequest": {
+                "title": "Login Request",
+                "description": "Request body for user login",
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "john@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "password123"
+                    }
+                },
+                "type": "object"
+            },
+            "RegisterRequest": {
+                "title": "Register Request",
+                "description": "Request body for user registration",
+                "required": [
+                    "name",
+                    "email",
+                    "password",
+                    "password_confirmation"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "john@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "password123"
+                    },
+                    "password_confirmation": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "password123"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "description": "Laravel Sanctum authentication. Use the token received from login endpoint.",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
     "tags": [
         {
             "name": "Authentication",
-            "description": "Authentication"
+            "description": "User authentication and authorization endpoints"
         },
         {
             "name": "Books",
-            "description": "Books"
-        },
-        {
-            "name": "Borrows",
-            "description": "Borrows"
-        },
-        {
-            "name": "Returns",
-            "description": "Returns"
+            "description": "Book management operations including search and categorization"
         },
         {
             "name": "Categories",
-            "description": "Categories"
+            "description": "Book category management operations"
         },
         {
             "name": "Users",
-            "description": "Users"
+            "description": "User management operations (Admin only)"
+        },
+        {
+            "name": "Borrows",
+            "description": "Book borrowing workflow management including requests and approvals"
+        },
+        {
+            "name": "Returns",
+            "description": "Book return workflow management including requests and approvals"
         }
     ]
 }
