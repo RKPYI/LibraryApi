@@ -20,7 +20,7 @@ class AdminMiddleware
     {
         $user = $request->user();
 
-        if (!$user || $user->isAdmin() === false) {
+        if (! $user || $user->isAdmin() === false) {
             return $this->error('Unauthorized access', [], 403);
         }
 

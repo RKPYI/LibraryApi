@@ -13,6 +13,7 @@ use Tests\TestCase;
 class UserServiceTest extends TestCase
 {
     protected $userRepoMock;
+
     protected $userService;
 
     protected function setUp(): void
@@ -34,7 +35,7 @@ class UserServiceTest extends TestCase
         $this->userRepoMock
             ->shouldReceive('getAll')
             ->once()
-            ->andReturn(new Collection([new User(), new User()]));
+            ->andReturn(new Collection([new User, new User]));
 
         $users = $this->userService->getAll();
 

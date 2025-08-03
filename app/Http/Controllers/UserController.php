@@ -23,6 +23,7 @@ class UserController extends Controller
      *  tags={"Users"},
      *  summary="Get list of users (Admin only)",
      *  security={{"sanctum":{}}},
+     *
      *  @OA\Response(
      *      response=200,
      *      description="Users retrieved successfully",
@@ -40,6 +41,7 @@ class UserController extends Controller
     public function index()
     {
         $users = $this->userService->getAll();
+
         return $this->success($users, 'Users retrieved successfully');
     }
 
@@ -49,12 +51,15 @@ class UserController extends Controller
      *  tags={"Users"},
      *  summary="Get user details",
      *  security={{"sanctum":{}}},
+     *
      *  @OA\Parameter(
      *      name="id",
      *      in="path",
      *      required=true,
+     *
      *      @OA\Schema(type="integer")
      *  ),
+     *
      *  @OA\Response(
      *      response=200,
      *      description="User retrieved successfully",
@@ -76,12 +81,12 @@ class UserController extends Controller
     public function show(Request $request, $id)
     {
         $auth = $request->user();
-        if (!$auth->isAdmin() && $auth->id !== (int)$id) {
+        if (! $auth->isAdmin() && $auth->id !== (int) $id) {
             return $this->error('Unauthorized access', [], 403);
         }
 
         $user = $this->userService->details($id);
-        if (!$user) {
+        if (! $user) {
             return $this->error('User not found', [], 404);
         }
 
@@ -94,19 +99,25 @@ class UserController extends Controller
      *  tags={"Users"},
      *  summary="Update user",
      *  security={{"sanctum":{}}},
+     *
      *  @OA\Parameter(
      *      name="id",
      *      in="path",
      *      required=true,
+     *
      *      @OA\Schema(type="integer")
      *  ),
+     *
      *  @OA\RequestBody(
+     *
      *      @OA\JsonContent(
+     *
      *          @OA\Property(property="name", type="string", example="John Doe"),
      *          @OA\Property(property="email", type="string", format="email", example="johndoe@example.com"),
      *          @OA\Property(property="role", type="string", enum={"member", "admin"}, example="member")
      *      )
      *  ),
+     *
      *  @OA\Response(
      *      response=200,
      *      description="User updated successfully",
@@ -132,13 +143,13 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $auth = $request->user();
-        if (!$auth->isAdmin() && $auth->id !== (int)$id) {
+        if (! $auth->isAdmin() && $auth->id !== (int) $id) {
             return $this->error('Unauthorized access', [], 403);
         }
 
         $rules = [
             'name' => 'sometimes|required|string|max:255',
-            'email' => 'sometimes|required|email|max:255|unique:users,email,' . $id,
+            'email' => 'sometimes|required|email|max:255|unique:users,email,'.$id,
         ];
 
         if ($auth->isAdmin()) {
@@ -146,12 +157,12 @@ class UserController extends Controller
         }
 
         $data = $request->validate($rules);
-        if (!$auth->isAdmin() && isset($data['role'])) {
+        if (! $auth->isAdmin() && isset($data['role'])) {
             unset($data['role']);
         }
 
         $user = $this->userService->update($id, $data);
-        if (!$user) {
+        if (! $user) {
             return $this->error('User not found or update failed', [], 404);
         }
 
@@ -164,12 +175,15 @@ class UserController extends Controller
      *  tags={"Users"},
      *  summary="Delete user",
      *  security={{"sanctum":{}}},
+     *
      *  @OA\Parameter(
      *      name="id",
      *      in="path",
      *      required=true,
+     *
      *      @OA\Schema(type="integer")
      *  ),
+     *
      *  @OA\Response(
      *      response=204,
      *      description="User deleted successfully",
@@ -191,7 +205,7 @@ class UserController extends Controller
     public function destroy(Request $request, $id)
     {
         $auth = $request->user();
-        if (!$auth->isAdmin() && $auth->id !== (int)$id) {
+        if (! $auth->isAdmin() && $auth->id !== (int) $id) {
             return $this->error('Unauthorized access', [], 403);
         }
 

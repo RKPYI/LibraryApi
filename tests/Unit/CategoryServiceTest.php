@@ -11,6 +11,7 @@ use PHPUnit\Framework\TestCase;
 class CategoryServiceTest extends TestCase
 {
     protected CategoryService $service;
+
     protected $mockRepo;
 
     protected function setUp(): void

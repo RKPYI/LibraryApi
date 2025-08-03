@@ -20,7 +20,7 @@ class BorrowService
     public function getAll($user, array $filters = [])
     {
 
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             $filters['user_id'] = $user->id;
         }
 
@@ -41,7 +41,7 @@ class BorrowService
 
     public function getOverdueBorrows(User $user)
     {
-        if (!$user->isAdmin()) {
+        if (! $user->isAdmin()) {
             return $this->borrowRepo->getUserOverdueBorrows($user->id);
         }
 
@@ -51,8 +51,8 @@ class BorrowService
     public function details($id, User $user)
     {
         $borrow = $this->borrowRepo->details($id);
-        if (!$borrow) {
-            throw new ModelNotFoundException("Borrow not found.");
+        if (! $borrow) {
+            throw new ModelNotFoundException('Borrow not found.');
         }
 
         if ($user->isAdmin() || $borrow->user_id === $user->id) {
@@ -74,12 +74,12 @@ class BorrowService
     public function approveBorrow(Borrow $borrow, array $data)
     {
         if ($borrow->status !== Borrow::STATUS_PENDING) {
-            throw new \Exception("Cannot approve borrow request unless it is pending.");
+            throw new \Exception('Cannot approve borrow request unless it is pending.');
         }
 
         $book = $borrow->book;
         if ($book->stock < 1) {
-            throw new \Exception("Book is out of stock.");
+            throw new \Exception('Book is out of stock.');
         }
 
         $book->decrement('stock');
@@ -97,17 +97,17 @@ class BorrowService
     public function rejectBorrow(Borrow $borrow, array $data, User $user)
     {
         if ($borrow->status !== Borrow::STATUS_PENDING) {
-            throw new \Exception("Cannot reject borrow request unless it is pending.");
+            throw new \Exception('Cannot reject borrow request unless it is pending.');
         }
 
         // Only the user who created the borrow request or an admin can reject it
-        if ($borrow->user_id !== $user->id && !$user->isAdmin()) {
+        if ($borrow->user_id !== $user->id && ! $user->isAdmin()) {
             throw new AuthorizationException('Unauthorized to reject this borrow request.');
         }
 
         $cancelledBy = $user->isAdmin() ? 'admin' : 'user';
         $note = $data['notes'] ?? 'Borrow request was cancelled';
-        $note .= ' by: ' . $cancelledBy;
+        $note .= ' by: '.$cancelledBy;
 
         return $this->borrowRepo->update($borrow, [
             'status' => Borrow::STATUS_CANCELLED,
@@ -131,8 +131,8 @@ class BorrowService
             Borrow::STATUS_RETURN_REJECTED,
         ];
 
-        if (!in_array($borrow->status, $allowedStatuses)) {
-            throw new \Exception("Cannot return book unless it is currently borrowed.");
+        if (! in_array($borrow->status, $allowedStatuses)) {
+            throw new \Exception('Cannot return book unless it is currently borrowed.');
         }
 
         return $this->borrowRepo->update($borrow, [
@@ -145,7 +145,7 @@ class BorrowService
     public function approveReturnBook(Borrow $borrow, array $data)
     {
         if ($borrow->status !== Borrow::STATUS_RETURN_REQUESTED) {
-            throw new \Exception("Cannot approve return unless it is requested.");
+            throw new \Exception('Cannot approve return unless it is requested.');
         }
 
         $book = $borrow->book;
@@ -161,7 +161,7 @@ class BorrowService
     public function rejectReturnBook(Borrow $borrow, array $data)
     {
         if ($borrow->status !== Borrow::STATUS_RETURN_REQUESTED) {
-            throw new \Exception("Cannot reject return unless it is requested.");
+            throw new \Exception('Cannot reject return unless it is requested.');
         }
 
         return $this->borrowRepo->update($borrow, [

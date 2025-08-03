@@ -13,6 +13,7 @@ use Tests\TestCase;
 class AuthServiceTest extends TestCase
 {
     protected $authRepoMock;
+
     protected $authService;
 
     protected function setUp(): void
@@ -36,7 +37,7 @@ class AuthServiceTest extends TestCase
         $userData = [
             'name' => 'Test User',
             'email' => 'test@example.com',
-            'password' => 'password'
+            'password' => 'password',
         ];
 
         // We expect the createUser method to be called once with the user data
@@ -57,12 +58,12 @@ class AuthServiceTest extends TestCase
     {
         $credentials = [
             'email' => 'test@example.com',
-            'password' => 'password'
+            'password' => 'password',
         ];
 
         $user = new User([
             'email' => $credentials['email'],
-            'password' => Hash::make($credentials['password'])
+            'password' => Hash::make($credentials['password']),
         ]);
 
         // Mock the repository to return the user
@@ -83,12 +84,12 @@ class AuthServiceTest extends TestCase
     {
         $credentials = [
             'email' => 'test@example.com',
-            'password' => 'wrongpassword'
+            'password' => 'wrongpassword',
         ];
 
         $user = new User([
             'email' => $credentials['email'],
-            'password' => Hash::make('correctpassword')
+            'password' => Hash::make('correctpassword'),
         ]);
 
         $this->authRepoMock
@@ -107,7 +108,7 @@ class AuthServiceTest extends TestCase
     {
         $credentials = [
             'email' => 'nonexistent@example.com',
-            'password' => 'password'
+            'password' => 'password',
         ];
 
         // Mock the repository to return null (user not found)

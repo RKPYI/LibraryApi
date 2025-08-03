@@ -22,16 +22,20 @@ class AuthController extends Controller
      *  path="/api/v1/auth/register",
      *  tags={"Authentication"},
      *  summary="Register a new user",
+     *
      *  @OA\RequestBody(
      *      required=true,
+     *
      *      @OA\JsonContent(
      *          required={"name", "email", "password", "password_confirmation"},
+     *
      *          @OA\Property(property="name", type="string", example="John Doe"),
      *          @OA\Property(property="email", type="string", format="email", example="johndoe@example.com"),
      *          @OA\Property(property="password", type="string", format="password", example="password123"),
      *          @OA\Property(property="password_confirmation", type="string", format="password", example="password123")
      *      ),
      *  ),
+     *
      *  @OA\Response(
      *      response=201,
      *      description="User registered successfully",
@@ -60,14 +64,18 @@ class AuthController extends Controller
      *  path="/api/v1/auth/login",
      *  tags={"Authentication"},
      *  summary="Login a user",
+     *
      *  @OA\RequestBody(
      *      required=true,
+     *
      *      @OA\JsonContent(
      *          required={"email", "password"},
+     *
      *          @OA\Property(property="email", type="string", format="email", example="johndoe@example.com"),
      *          @OA\Property(property="password", type="string", format="password", example="password123")
      *      ),
      *  ),
+     *
      *  @OA\Response(
      *      response=200,
      *      description="User logged in successfully",
@@ -91,7 +99,7 @@ class AuthController extends Controller
 
         $user = $this->authService->authenticate($credentials);
 
-        if (!$user) {
+        if (! $user) {
             return $this->error('Invalid credentials', [], 401);
         }
 
@@ -106,6 +114,7 @@ class AuthController extends Controller
      *  tags={"Authentication"},
      *  summary="Logout a user",
      *  security={{"sanctum":{}}},
+     *
      *  @OA\Response(
      *      response=204,
      *      description="User logged out successfully",
@@ -116,7 +125,8 @@ class AuthController extends Controller
      *  )
      * )
      */
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         $request->user()->currentAccessToken()->delete();
 
         return $this->success(null, 'User logged out successfully', 204);
@@ -128,6 +138,7 @@ class AuthController extends Controller
      *  tags={"Authentication"},
      *  summary="Get current user details",
      *  security={{"sanctum":{}}},
+     *
      *  @OA\Response(
      *      response=200,
      *      description="User retrieved successfully",

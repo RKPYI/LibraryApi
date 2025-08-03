@@ -22,8 +22,10 @@ class UserRepository implements UserRepositoryInterface
         $user = User::find($id);
         if ($user) {
             $user->update($data);
+
             return $user;
         }
+
         return null;
     }
 
@@ -32,8 +34,10 @@ class UserRepository implements UserRepositoryInterface
         $user = User::find($id);
         if ($user) {
             $user->delete();
+
             return true;
         }
+
         return false;
     }
 }

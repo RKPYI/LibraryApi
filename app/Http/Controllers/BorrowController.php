@@ -24,26 +24,35 @@ class BorrowController extends Controller
      *  tags={"Borrows"},
      *  summary="Get list of borrows",
      *  security={{"sanctum":{}}},
+     *
      *  @OA\Parameter(
      *      name="status",
      *      in="query",
+     *
      *      @OA\Schema(type="string", enum={"pending", "borrowed", "overdue", "returned", "cancelled", "return_requested", "return_rejected"})
      *  ),
+     *
      *  @OA\Parameter(
      *      name="book_id",
      *      in="query",
+     *
      *      @OA\Schema(type="integer")
      *  ),
+     *
      *  @OA\Parameter(
      *      name="from_date",
      *      in="query",
+     *
      *      @OA\Schema(type="string", format="date")
      *  ),
+     *
      *  @OA\Parameter(
      *      name="to_date",
      *      in="query",
+     *
      *      @OA\Schema(type="string", format="date")
      *  ),
+     *
      *  @OA\Response(
      *      response=200,
      *      description="Borrow records retrieved successfully",
@@ -68,14 +77,18 @@ class BorrowController extends Controller
      *  tags={"Borrows"},
      *  summary="Request a borrow (Member action)",
      *  security={{"sanctum":{}}},
+     *
      *  @OA\RequestBody(
      *      required=true,
+     *
      *      @OA\JsonContent(
      *          required={"book_id"},
+     *
      *          @OA\Property(property="book_id", type="integer", example=1),
      *          @OA\Property(property="notes", type="string", example="I would like to borrow this book.")
      *      )
      *  ),
+     *
      *  @OA\Response(
      *      response=201,
      *      description="Borrow record created successfully",
@@ -110,12 +123,15 @@ class BorrowController extends Controller
      *  tags={"Borrows"},
      *  summary="Get borrow details",
      *  security={{"sanctum":{}}},
+     *
      *  @OA\Parameter(
      *      name="borrow",
      *      in="path",
      *      required=true,
+     *
      *      @OA\Schema(type="integer")
      *  ),
+     *
      *  @OA\Response(
      *      response=200,
      *      description="Borrow record retrieved successfully",
@@ -137,6 +153,7 @@ class BorrowController extends Controller
     public function show(Borrow $borrow)
     {
         $borrowDetails = $this->borrowService->details($borrow->id, request()->user());
+
         return $this->success($borrowDetails, 'Borrow record retrieved successfully');
     }
 
@@ -146,18 +163,24 @@ class BorrowController extends Controller
      *  tags={"Borrows"},
      *  summary="Approve a borrow (Admin action)",
      *  security={{"sanctum":{}}},
+     *
      *  @OA\Parameter(
      *      name="borrow",
      *      in="path",
      *      required=true,
+     *
      *      @OA\Schema(type="integer")
      *  ),
+     *
      *  @OA\RequestBody(
+     *
      *      @OA\JsonContent(
+     *
      *          @OA\Property(property="due_date", type="string", format="date", example="2025-07-23"),
      *          @OA\Property(property="notes", type="string", example="Approved")
      *      )
      *  ),
+     *
      *  @OA\Response(
      *      response=200,
      *      description="Borrow record updated successfully",
@@ -194,17 +217,23 @@ class BorrowController extends Controller
      *  tags={"Borrows"},
      *  summary="Reject & Cancel a borrow",
      *  security={{"sanctum":{}}},
+     *
      *  @OA\Parameter(
      *      name="borrow",
      *      in="path",
      *      required=true,
+     *
      *      @OA\Schema(type="integer")
      *  ),
+     *
      *  @OA\RequestBody(
+     *
      *      @OA\JsonContent(
+     *
      *          @OA\Property(property="notes", type="string", example="Rejected due to some reason.")
      *      )
      *  ),
+     *
      *  @OA\Response(
      *      response=200,
      *      description="Borrow request rejected successfully",
@@ -240,12 +269,15 @@ class BorrowController extends Controller
      *  tags={"Borrows"},
      *  summary="Delete a borrow record (Admin action)",
      *  security={{"sanctum":{}}},
+     *
      *  @OA\Parameter(
      *      name="borrow",
      *      in="path",
      *      required=true,
+     *
      *      @OA\Schema(type="integer")
      *  ),
+     *
      *  @OA\Response(
      *      response=204,
      *      description="Borrow record deleted successfully",
@@ -277,6 +309,7 @@ class BorrowController extends Controller
      *  tags={"Borrows"},
      *  summary="Get overdue borrows",
      *  security={{"sanctum":{}}},
+     *
      *  @OA\Response(
      *      response=200,
      *      description="Overdue borrow records retrieved successfully",
@@ -300,17 +333,23 @@ class BorrowController extends Controller
      *  tags={"Returns"},
      *  summary="Request to return a book",
      *  security={{"sanctum":{}}},
+     *
      *  @OA\Parameter(
      *      name="borrow",
      *      in="path",
      *      required=true,
+     *
      *      @OA\Schema(type="integer")
      *  ),
+     *
      *  @OA\RequestBody(
+     *
      *      @OA\JsonContent(
+     *
      *          @OA\Property(property="notes", type="string", example="Returning the book.")
      *      )
      *  ),
+     *
      *  @OA\Response(
      *      response=200,
      *      description="Return request submitted successfully",
@@ -342,17 +381,23 @@ class BorrowController extends Controller
      *  tags={"Returns"},
      *  summary="Approve a book return (Admin action)",
      *  security={{"sanctum":{}}},
+     *
      *  @OA\Parameter(
      *      name="borrow",
      *      in="path",
      *      required=true,
+     *
      *      @OA\Schema(type="integer")
      *  ),
+     *
      *  @OA\RequestBody(
+     *
      *      @OA\JsonContent(
+     *
      *          @OA\Property(property="notes", type="string", example="Return approved.")
      *      )
      *  ),
+     *
      *  @OA\Response(
      *      response=200,
      *      description="Return approved successfully",
@@ -388,17 +433,23 @@ class BorrowController extends Controller
      *  tags={"Returns"},
      *  summary="Reject a book return (Admin action)",
      *  security={{"sanctum":{}}},
+     *
      *  @OA\Parameter(
      *      name="borrow",
      *      in="path",
      *      required=true,
+     *
      *      @OA\Schema(type="integer")
      *  ),
+     *
      *  @OA\RequestBody(
+     *
      *      @OA\JsonContent(
+     *
      *          @OA\Property(property="notes", type="string", example="Return rejected.")
      *      )
      *  ),
+     *
      *  @OA\Response(
      *      response=200,
      *      description="Return rejected successfully",

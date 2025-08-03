@@ -15,6 +15,7 @@ use Tests\TestCase;
 class BookServiceTest extends TestCase
 {
     protected $bookRepoMock;
+
     protected $bookService;
 
     protected function setUp(): void
@@ -36,7 +37,7 @@ class BookServiceTest extends TestCase
         $this->bookRepoMock
             ->shouldReceive('getAll')
             ->once()
-            ->andReturn(new Collection([new Book(), new Book()]));
+            ->andReturn(new Collection([new Book, new Book]));
 
         $books = $this->bookService->getAll();
 
@@ -47,7 +48,7 @@ class BookServiceTest extends TestCase
     #[Test]
     public function it_can_get_book_details()
     {
-        $book = new Book();
+        $book = new Book;
         $book->setRawAttributes(['id' => 1, 'title' => 'Test Book']);
         $this->bookRepoMock
             ->shouldReceive('details')

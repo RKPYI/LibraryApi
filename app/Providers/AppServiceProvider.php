@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\Order;
 use App\Repositories\Contracts\AuthRepositoryInterface;
 use App\Repositories\Contracts\BookRepositoryInterface;
 use App\Repositories\Contracts\BorrowRepositoryInterface;
@@ -15,7 +14,6 @@ use App\Repositories\Eloquent\CategoryRepository;
 use App\Repositories\Eloquent\UserRepository;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\Middleware\Authenticate;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 

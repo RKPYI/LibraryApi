@@ -7,13 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 class Borrow extends Model
 {
     const STATUS_PENDING = 'pending';
+
     const STATUS_BORROWED = 'borrowed';
+
     const STATUS_RETURNED = 'returned';
+
     const STATUS_OVERDUE = 'overdue';
+
     const STATUS_CANCELLED = 'cancelled';
+
     const STATUS_LOST_REQUESTED = 'lost_requested';
+
     const STATUS_LOST = 'lost';
+
     const STATUS_RETURN_REQUESTED = 'return_requested';
+
     const STATUS_RETURN_REJECTED = 'return_rejected';
 
     protected $fillable = [

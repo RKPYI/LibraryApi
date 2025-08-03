@@ -12,7 +12,7 @@ trait ApiResponse
             'status' => 'success',
             'message' => $message,
             'data' => $data,
-            'code' => $code
+            'code' => $code,
         ], $code);
     }
 
@@ -22,7 +22,7 @@ trait ApiResponse
             'status' => 'error',
             'message' => $message,
             'errors' => $errors,
-            'code' => $code
+            'code' => $code,
         ], $code);
     }
 }

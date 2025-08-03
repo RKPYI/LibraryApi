@@ -31,6 +31,7 @@ class FlushAllCache extends Command
         $this->call('cache:clear');
 
         $this->info('✅ All caches have been cleared: config, route, view, and app.');
+
         return Command::SUCCESS;
     }
 }

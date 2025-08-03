@@ -23,6 +23,7 @@ class CategoryController extends Controller
      *  path="/api/v1/categories",
      *  tags={"Categories"},
      *  summary="Get list of categories",
+     *
      *  @OA\Response(
      *      response=200,
      *      description="Categories retrieved successfully",
@@ -32,6 +33,7 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = $this->categoryService->getAll();
+
         return $this->success($categories, 'Categories retrieved successfully');
     }
 
@@ -41,14 +43,18 @@ class CategoryController extends Controller
      *  tags={"Categories"},
      *  summary="Create a new category",
      *  security={{"sanctum":{}}},
+     *
      *  @OA\RequestBody(
      *      required=true,
+     *
      *      @OA\JsonContent(
      *          required={"name"},
+     *
      *          @OA\Property(property="name", type="string", example="Fiction"),
      *          @OA\Property(property="description", type="string", example="Fictional books")
      *      )
      *  ),
+     *
      *  @OA\Response(
      *      response=201,
      *      description="Category created successfully",
@@ -84,12 +90,15 @@ class CategoryController extends Controller
      *  path="/api/v1/categories/{category}",
      *  tags={"Categories"},
      *  summary="Get category details",
+     *
      *  @OA\Parameter(
      *      name="category",
      *      in="path",
      *      required=true,
+     *
      *      @OA\Schema(type="integer")
      *  ),
+     *
      *  @OA\Response(
      *      response=200,
      *      description="Category retrieved successfully",
@@ -111,20 +120,26 @@ class CategoryController extends Controller
      *  tags={"Categories"},
      *  summary="Update a category",
      *  security={{"sanctum":{}}},
+     *
      *  @OA\Parameter(
      *      name="category",
      *      in="path",
      *      required=true,
+     *
      *      @OA\Schema(type="integer")
      *  ),
+     *
      *  @OA\RequestBody(
      *      required=true,
+     *
      *      @OA\JsonContent(
      *          required={"name"},
+     *
      *          @OA\Property(property="name", type="string", example="Fiction"),
      *          @OA\Property(property="description", type="string", example="Fictional books")
      *      )
      *  ),
+     *
      *  @OA\Response(
      *      response=200,
      *      description="Category updated successfully",
@@ -165,12 +180,15 @@ class CategoryController extends Controller
      *  tags={"Categories"},
      *  summary="Delete a category",
      *  security={{"sanctum":{}}},
+     *
      *  @OA\Parameter(
      *      name="category",
      *      in="path",
      *      required=true,
+     *
      *      @OA\Schema(type="integer")
      *  ),
+     *
      *  @OA\Response(
      *      response=204,
      *      description="Category deleted successfully",
@@ -192,6 +210,7 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $this->categoryService->delete($category);
+
         return $this->success([], 'Category deleted successfully', 204);
     }
 }

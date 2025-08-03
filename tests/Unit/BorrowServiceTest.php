@@ -17,10 +17,15 @@ use Tests\TestCase;
 class BorrowServiceTest extends TestCase
 {
     protected $borrowRepoMock;
+
     protected $borrowService;
+
     protected $adminUser;
+
     protected $memberUser;
+
     protected $book;
+
     protected $borrow;
 
     protected function setUp(): void
@@ -34,14 +39,14 @@ class BorrowServiceTest extends TestCase
             'id' => 1,
             'name' => 'Admin User',
             'email' => 'admin@example.com',
-            'role' => 'admin'
+            'role' => 'admin',
         ]);
 
         $this->memberUser = new User([
             'id' => 2,
             'name' => 'Member User',
             'email' => 'member@example.com',
-            'role' => 'member'
+            'role' => 'member',
         ]);
 
         // Create test book (mocked to avoid database interactions)
@@ -62,7 +67,7 @@ class BorrowServiceTest extends TestCase
             'borrow_date' => null,
             'due_date' => null,
             'return_date' => null,
-            'notes' => null
+            'notes' => null,
         ]);
         $this->borrow->user = $this->memberUser;
         $this->borrow->book = $this->book;
@@ -117,7 +122,7 @@ class BorrowServiceTest extends TestCase
         $borrowedBorrow = new Borrow([
             'id' => 1,
             'status' => Borrow::STATUS_BORROWED,
-            'due_date' => Carbon::now()->subDays(1) // Past due date
+            'due_date' => Carbon::now()->subDays(1), // Past due date
         ]);
 
         $borrows = new Collection([$borrowedBorrow]);
@@ -197,13 +202,12 @@ class BorrowServiceTest extends TestCase
         $otherUser = new User([
             'id' => 3,
             'name' => 'Other User',
-            'role' => 'member'
+            'role' => 'member',
         ]);
         $this->borrow->user_id = 2; // assign manual, karena ID tidak auto-set
         $this->borrow->setAttribute('user_id', 2); // opsional, eksplisit
 
         $otherUser->id = 3; // assign manual juga
-
 
         $this->borrowRepoMock
             ->shouldReceive('details')
@@ -223,7 +227,7 @@ class BorrowServiceTest extends TestCase
         $data = [
             'book_id' => 1,
             'due_date' => Carbon::now()->addDays(14),
-            'notes' => 'Test notes'
+            'notes' => 'Test notes',
         ];
 
         $this->borrowRepoMock
@@ -249,7 +253,7 @@ class BorrowServiceTest extends TestCase
             'id' => 1,
             'status' => Borrow::STATUS_PENDING,
             'user_id' => $this->memberUser->id,
-            'book_id' => 1
+            'book_id' => 1,
         ]);
 
         // Mock the book with proper stock management
@@ -261,7 +265,7 @@ class BorrowServiceTest extends TestCase
         $approvalData = [
             'borrow_date' => Carbon::now(),
             'due_date' => Carbon::now()->addDays(14),
-            'notes' => 'Approved'
+            'notes' => 'Approved',
         ];
 
         $this->borrowRepoMock
@@ -284,7 +288,7 @@ class BorrowServiceTest extends TestCase
     public function it_throws_exception_when_approving_non_pending_borrow()
     {
         $borrowRequest = new Borrow([
-            'status' => Borrow::STATUS_BORROWED
+            'status' => Borrow::STATUS_BORROWED,
         ]);
 
         $this->expectException(\Exception::class);
@@ -297,7 +301,7 @@ class BorrowServiceTest extends TestCase
     public function it_throws_exception_when_book_out_of_stock()
     {
         $borrowRequest = new Borrow([
-            'status' => Borrow::STATUS_PENDING
+            'status' => Borrow::STATUS_PENDING,
         ]);
 
         $outOfStockBook = Mockery::mock(Book::class);
@@ -315,7 +319,7 @@ class BorrowServiceTest extends TestCase
     {
         $borrowRequest = new Borrow([
             'status' => Borrow::STATUS_PENDING,
-            'user_id' => $this->memberUser->id
+            'user_id' => $this->memberUser->id,
         ]);
 
         $rejectionData = ['notes' => 'Not available'];
@@ -341,7 +345,7 @@ class BorrowServiceTest extends TestCase
     {
         $borrowRequest = new Borrow([
             'status' => Borrow::STATUS_PENDING,
-            'user_id' => $this->memberUser->id
+            'user_id' => $this->memberUser->id,
         ]);
 
         $rejectionData = ['notes' => 'Changed mind'];
@@ -365,7 +369,7 @@ class BorrowServiceTest extends TestCase
     {
         $borrowRequest = new Borrow([
             'status' => Borrow::STATUS_BORROWED,
-            'user_id' => $this->memberUser->id
+            'user_id' => $this->memberUser->id,
         ]);
 
         $this->expectException(\Exception::class);
@@ -379,12 +383,12 @@ class BorrowServiceTest extends TestCase
     {
         $otherUser = new User([
             'id' => 3,
-            'role' => 'member'
+            'role' => 'member',
         ]);
 
         $borrowRequest = new Borrow([
             'status' => Borrow::STATUS_PENDING,
-            'user_id' => $this->memberUser->id
+            'user_id' => $this->memberUser->id,
         ]);
 
         $this->borrow->user_id = 2; // assign manual, karena ID tidak auto-set
@@ -415,7 +419,7 @@ class BorrowServiceTest extends TestCase
     public function it_can_request_return_book_from_borrowed_status()
     {
         $borrowedBook = new Borrow([
-            'status' => Borrow::STATUS_BORROWED
+            'status' => Borrow::STATUS_BORROWED,
         ]);
 
         $returnData = ['notes' => 'Returning book'];
@@ -439,7 +443,7 @@ class BorrowServiceTest extends TestCase
     public function it_can_request_return_book_from_overdue_status()
     {
         $overdueBorrow = new Borrow([
-            'status' => Borrow::STATUS_OVERDUE
+            'status' => Borrow::STATUS_OVERDUE,
         ]);
 
         $returnData = ['notes' => 'Late return'];
@@ -461,7 +465,7 @@ class BorrowServiceTest extends TestCase
     public function it_can_request_return_book_from_return_rejected_status()
     {
         $rejectedReturn = new Borrow([
-            'status' => Borrow::STATUS_RETURN_REJECTED
+            'status' => Borrow::STATUS_RETURN_REJECTED,
         ]);
 
         $returnData = ['notes' => 'Requesting again'];
@@ -483,7 +487,7 @@ class BorrowServiceTest extends TestCase
     public function it_throws_exception_when_requesting_return_from_invalid_status()
     {
         $pendingBorrow = new Borrow([
-            'status' => Borrow::STATUS_PENDING
+            'status' => Borrow::STATUS_PENDING,
         ]);
 
         $this->expectException(\Exception::class);
@@ -497,7 +501,7 @@ class BorrowServiceTest extends TestCase
     {
         $returnRequest = new Borrow([
             'status' => Borrow::STATUS_RETURN_REQUESTED,
-            'notes' => 'Original notes'
+            'notes' => 'Original notes',
         ]);
 
         $mockBook = Mockery::mock(Book::class)->shouldAllowMockingProtectedMethods();
@@ -525,7 +529,7 @@ class BorrowServiceTest extends TestCase
     public function it_throws_exception_when_approving_return_from_invalid_status()
     {
         $borrowedBook = new Borrow([
-            'status' => Borrow::STATUS_BORROWED
+            'status' => Borrow::STATUS_BORROWED,
         ]);
 
         $this->expectException(\Exception::class);
@@ -540,7 +544,7 @@ class BorrowServiceTest extends TestCase
         $returnRequest = new Borrow([
             'status' => Borrow::STATUS_RETURN_REQUESTED,
             'due_date' => Carbon::now()->addDays(7),
-            'notes' => 'Original notes'
+            'notes' => 'Original notes',
         ]);
 
         $rejectionData = ['notes' => 'Book is damaged'];
@@ -565,7 +569,7 @@ class BorrowServiceTest extends TestCase
     public function it_throws_exception_when_rejecting_return_from_invalid_status()
     {
         $borrowedBook = new Borrow([
-            'status' => Borrow::STATUS_BORROWED
+            'status' => Borrow::STATUS_BORROWED,
         ]);
 
         $this->expectException(\Exception::class);
@@ -578,7 +582,7 @@ class BorrowServiceTest extends TestCase
     public function it_uses_default_values_when_approving_borrow_without_dates()
     {
         $borrowRequest = new Borrow([
-            'status' => Borrow::STATUS_PENDING
+            'status' => Borrow::STATUS_PENDING,
         ]);
 
         $mockBook = Mockery::mock(Book::class)->shouldAllowMockingProtectedMethods();
@@ -607,7 +611,7 @@ class BorrowServiceTest extends TestCase
     {
         $returnRequest = new Borrow([
             'status' => Borrow::STATUS_RETURN_REQUESTED,
-            'notes' => 'Original notes'
+            'notes' => 'Original notes',
         ]);
 
         $mockBook = Mockery::mock(Book::class)->shouldAllowMockingProtectedMethods();
@@ -634,7 +638,7 @@ class BorrowServiceTest extends TestCase
         $returnRequest = new Borrow([
             'status' => Borrow::STATUS_RETURN_REQUESTED,
             'due_date' => Carbon::now()->addDays(7),
-            'notes' => 'Original notes'
+            'notes' => 'Original notes',
         ]);
 
         $this->borrowRepoMock
@@ -675,7 +679,7 @@ class BorrowServiceTest extends TestCase
         $borrowedBorrow = new Borrow([
             'id' => 1,
             'status' => Borrow::STATUS_BORROWED,
-            'due_date' => null // No due date
+            'due_date' => null, // No due date
         ]);
 
         $borrows = new Collection([$borrowedBorrow]);
@@ -696,7 +700,7 @@ class BorrowServiceTest extends TestCase
         $borrowedBorrow = new Borrow([
             'id' => 1,
             'status' => Borrow::STATUS_BORROWED,
-            'due_date' => Carbon::now()->addDays(1) // Future due date
+            'due_date' => Carbon::now()->addDays(1), // Future due date
         ]);
 
         $borrows = new Collection([$borrowedBorrow]);

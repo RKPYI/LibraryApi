@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Book;
 use App\Models\Category;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class BookCategorySeeder extends Seeder
@@ -19,6 +18,7 @@ class BookCategorySeeder extends Seeder
 
         if ($books->isEmpty() || $categories->isEmpty()) {
             $this->command->info('No books or categories to seed. Please run BookSeeder and StandardCategorySeeder first.');
+
             return;
         }
 

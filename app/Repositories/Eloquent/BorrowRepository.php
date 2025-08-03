@@ -66,12 +66,14 @@ class BorrowRepository implements BorrowRepositoryInterface
     public function update(Borrow $borrow, array $data)
     {
         $borrow->update($data);
+
         return $borrow;
     }
 
     public function delete($borrow)
     {
         $borrow->delete();
+
         return true;
     }
 

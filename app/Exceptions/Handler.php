@@ -4,12 +4,12 @@ namespace App\Exceptions;
 
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
-use Throwable;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Throwable;
 
 class Handler
 {
@@ -27,7 +27,7 @@ class Handler
             return response()->json([
                 'status' => 'error',
                 'message' => 'Unauthenticated. You must be logged in to access this resource.',
-                'code' => 401
+                'code' => 401,
             ], 401);
         }
 
@@ -35,16 +35,17 @@ class Handler
             return response()->json([
                 'status' => 'error',
                 'message' => 'Unauthorized. You do not have permission to access this resource.',
-                'code' => 403
+                'code' => 403,
             ], 403);
         }
 
         if ($e instanceof ModelNotFoundException) {
             $model = class_basename($e->getModel());
+
             return response()->json([
                 'status' => 'error',
                 'message' => "{$model} not found.",
-                'code' => 404
+                'code' => 404,
             ], 404);
         }
 
@@ -56,14 +57,14 @@ class Handler
                 return response()->json([
                     'status' => 'error',
                     'message' => "{$model} not found.",
-                    'code' => 404
+                    'code' => 404,
                 ], 404);
             }
 
             return response()->json([
                 'status' => 'error',
                 'message' => 'Not found.',
-                'code' => 404
+                'code' => 404,
             ], 404);
         }
 
@@ -72,7 +73,7 @@ class Handler
                 'status' => 'error',
                 'message' => 'Validation failed.',
                 'errors' => $e->errors(),
-                'code' => 422
+                'code' => 422,
             ], 422);
         }
 
@@ -80,7 +81,7 @@ class Handler
             'status' => 'error',
             'message' => 'Server error.',
             'error' => config('app.debug') ? $e->getMessage() : null,
-            'code' => 500
+            'code' => 500,
         ], 500);
     }
 }

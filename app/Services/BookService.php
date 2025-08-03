@@ -36,7 +36,7 @@ class BookService
             $data['cover_image'] = null;
         }
 
-        if (!empty($categoryIds)) {
+        if (! empty($categoryIds)) {
             return $this->bookRepo->createWithCategories($data, $categoryIds);
         }
 
@@ -54,7 +54,7 @@ class BookService
             $data['cover_image'] = null;
         }
 
-        if (!empty($categoryIds)) {
+        if (! empty($categoryIds)) {
             return $this->bookRepo->updateWithCategories($book, $data, $categoryIds);
         }
 

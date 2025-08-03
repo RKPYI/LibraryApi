@@ -33,5 +33,4 @@ class CategoryService
     {
         return $this->categoryRepo->delete($category);
     }
-
 }
